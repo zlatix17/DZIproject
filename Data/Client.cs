@@ -6,5 +6,6 @@ namespace DZIproject.Data
     {
         public string FullName { get; set; }
         public string Address { get; set; }
+        ICollection<Shopping> Shoppings { get; set; }
     }
 }

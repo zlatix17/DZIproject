@@ -12,19 +12,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DZIproject.Migrations
 {
     [DbContext(typeof(WebsDbContext))]
-    [Migration("20230209072454_InitialMigration")]
+    [Migration("20230220073814_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DZIproject.Data.Categorie", b =>
+            modelBuilder.Entity("DZIproject.Data.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,9 +125,6 @@ namespace DZIproject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -154,7 +151,7 @@ namespace DZIproject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriesId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -333,9 +330,9 @@ namespace DZIproject.Migrations
 
             modelBuilder.Entity("DZIproject.Data.Product", b =>
                 {
-                    b.HasOne("DZIproject.Data.Categorie", "Categories")
+                    b.HasOne("DZIproject.Data.Category", "Categories")
                         .WithMany("Products")
-                        .HasForeignKey("CategoriesId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -410,7 +407,7 @@ namespace DZIproject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DZIproject.Data.Categorie", b =>
+            modelBuilder.Entity("DZIproject.Data.Category", b =>
                 {
                     b.Navigation("Products");
                 });

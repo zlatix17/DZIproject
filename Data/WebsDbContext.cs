@@ -9,7 +9,7 @@ namespace DZIproject.Data
             : base(options)
         {
         }
-        public DbSet<Categorie> Categories {get;set;}
+        public DbSet<Category> Categories {get;set;}
         public DbSet<Product> Products { get; set; }
         public DbSet<Shopping> Shoppings { get; set; }
     }
