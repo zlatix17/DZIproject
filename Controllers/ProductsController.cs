@@ -21,7 +21,8 @@ namespace DZIproject.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Products.ToListAsync());
+            var websDbContext = _context.Products.Include(p => p.Categories);
+            return View(await websDbContext.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -33,6 +34,7 @@ namespace DZIproject.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Categories)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -45,6 +47,7 @@ namespace DZIproject.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
             return View();
         }
 
@@ -53,7 +56,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Size,Quantity,Description,Price,RegisterOn")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Size,Gender,Quantity,Description,Price,RegisterOn")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +64,7 @@ namespace DZIproject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
             return View(product);
         }
 
@@ -77,6 +81,7 @@ namespace DZIproject.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
             return View(product);
         }
 
@@ -85,7 +90,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Size,Quantity,Description,Price,RegisterOn")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Size,Gender,Quantity,Description,Price,RegisterOn")] Product product)
         {
             if (id != product.Id)
             {
@@ -112,6 +117,7 @@ namespace DZIproject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
             return View(product);
         }
 
@@ -124,6 +130,7 @@ namespace DZIproject.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Categories)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {

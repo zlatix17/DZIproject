@@ -14,6 +14,7 @@ namespace DZIproject.Data
         public int CategoryId { get; set; }
         public Category Categories { get; set; }
         public string Size { get; set; }
+        public Gender Gender { get; set; }
         public int Quantity { get; set; }
         public string Description { get; set; }
 

@@ -130,12 +130,15 @@ namespace DZIproject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -162,10 +165,8 @@ namespace DZIproject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClientsId")
+                    b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
@@ -182,7 +183,7 @@ namespace DZIproject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientsId");
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ProductId");
 
@@ -341,7 +342,9 @@ namespace DZIproject.Migrations
                 {
                     b.HasOne("DZIproject.Data.Client", "Clients")
                         .WithMany()
-                        .HasForeignKey("ClientsId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DZIproject.Data.Product", "Products")
                         .WithMany()

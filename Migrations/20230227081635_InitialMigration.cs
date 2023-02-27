@@ -179,9 +179,10 @@ namespace DZIproject.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     RegisterOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -201,8 +202,7 @@ namespace DZIproject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
-                    ClientsId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalSum = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -212,10 +212,11 @@ namespace DZIproject.Migrations
                 {
                     table.PrimaryKey("PK_Shoppings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shoppings_AspNetUsers_ClientsId",
-                        column: x => x.ClientsId,
+                        name: "FK_Shoppings_AspNetUsers_ClientId",
+                        column: x => x.ClientId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Shoppings_Products_ProductId",
                         column: x => x.ProductId,
@@ -269,9 +270,9 @@ namespace DZIproject.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shoppings_ClientsId",
+                name: "IX_Shoppings_ClientId",
                 table: "Shoppings",
-                column: "ClientsId");
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shoppings_ProductId",
