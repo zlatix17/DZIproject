@@ -20,6 +20,7 @@ namespace DZIproject.Data
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; }
+        public string ImageUrl { get; set; }
         public DateTime RegisterOn { get; set; }
         ICollection<Shopping> Shoppings { get; set; }
     }

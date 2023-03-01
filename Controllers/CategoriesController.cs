@@ -53,11 +53,12 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,RegisterOn")] Category categorie)
+        public async Task<IActionResult> Create([Bind("Name")] Category categorie)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categorie);
+                categorie.RegisterOn = DateTime.Now;
+                _context.Categories.Add(categorie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -85,7 +86,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,RegisterOn")] Category categorie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category categorie)
         {
             if (id != categorie.Id)
             {
@@ -96,6 +97,7 @@ namespace DZIproject.Controllers
             {
                 try
                 {
+                    categorie.RegisterOn = DateTime.Now;
                     _context.Update(categorie);
                     await _context.SaveChangesAsync();
                 }

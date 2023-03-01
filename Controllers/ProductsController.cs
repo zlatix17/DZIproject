@@ -47,7 +47,7 @@ namespace DZIproject.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -56,15 +56,16 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Size,Gender,Quantity,Description,Price,RegisterOn")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,CategoryId,Size,Gender,Quantity,Description,Price,ImageUrl")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                product.RegisterOn = DateTime.Now;
+                _context.Products.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -81,7 +82,7 @@ namespace DZIproject.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -90,7 +91,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Size,Gender,Quantity,Description,Price,RegisterOn")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Size,Gender,Quantity,Description,Price,ImageUrl")] Product product)
         {
             if (id != product.Id)
             {
@@ -101,6 +102,7 @@ namespace DZIproject.Controllers
             {
                 try
                 {
+                    product.RegisterOn = DateTime.Now;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -117,7 +119,7 @@ namespace DZIproject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
