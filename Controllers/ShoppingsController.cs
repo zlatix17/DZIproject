@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DZIproject.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace DZIproject.Controllers
 {
     public class ShoppingsController : Controller
     {
+        private readonly UserManager<Client> _userManager;
         private readonly WebsDbContext _context;
 
-        public ShoppingsController(WebsDbContext context)
+        public ShoppingsController(WebsDbContext context, UserManager<Client> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Shoppings
@@ -47,7 +50,7 @@ namespace DZIproject.Controllers
         // GET: Shoppings/Create
         public IActionResult Create()
         {
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id");
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name");
             return View();
         }
 
@@ -56,15 +59,17 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,ProductId,Quantity,TotalSum,RegisterOn")] Shopping shopping)
+        public async Task<IActionResult> Create([Bind("ClientId,ProductId,Quantity,TotalSum")] Shopping shopping)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(shopping);
+                shopping.ClientId = _userManager.GetUserId(User);
+                shopping.RegisterOn = DateTime.Now;
+                _context.Shoppings.Add(shopping);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", shopping.ProductId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", shopping.ProductId);
             return View(shopping);
         }
 
@@ -81,7 +86,7 @@ namespace DZIproject.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", shopping.ProductId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", shopping.ProductId);
             return View(shopping);
         }
 
@@ -90,7 +95,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,ProductId,Quantity,TotalSum,RegisterOn")] Shopping shopping)
+        public async Task<IActionResult> Edit(int id, [Bind("ClientId,ProductId,Quantity,TotalSum")] Shopping shopping)
         {
             if (id != shopping.Id)
             {
@@ -101,6 +106,8 @@ namespace DZIproject.Controllers
             {
                 try
                 {
+                    shopping.ClientId = _userManager.GetUserId(User);
+                    shopping.RegisterOn = DateTime.Now;
                     _context.Update(shopping);
                     await _context.SaveChangesAsync();
                 }
@@ -117,7 +124,7 @@ namespace DZIproject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", shopping.ProductId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", shopping.ProductId);
             return View(shopping);
         }
 
@@ -154,14 +161,14 @@ namespace DZIproject.Controllers
             {
                 _context.Shoppings.Remove(shopping);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ShoppingExists(int id)
         {
-          return _context.Shoppings.Any(e => e.Id == id);
+            return _context.Shoppings.Any(e => e.Id == id);
         }
     }
 }
