@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DZIproject.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DZIproject.Controllers
 {
+    [Authorize]
     public class ShoppingsController : Controller
     {
         private readonly UserManager<Client> _userManager;
@@ -24,8 +26,22 @@ namespace DZIproject.Controllers
         // GET: Shoppings
         public async Task<IActionResult> Index()
         {
-            var websDbContext = _context.Shoppings.Include(s => s.Products);
-            return View(await websDbContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+               var websDbContext = _context.Shoppings
+                .Include(s => s.Products)
+                .Include(s => s.Clients);
+               return View(await websDbContext.ToListAsync());
+            }
+            else
+            {
+                var currentUser = _userManager.GetUserId(User);
+                var websDbContext = _context.Shoppings
+               .Include(s => s.Products)
+               .Include(s => s.Clients).Where(s => s.ClientId == currentUser);
+                return View(await websDbContext.ToListAsync());
+
+            }
         }
 
         // GET: Shoppings/Details/5
@@ -59,12 +75,14 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientId,ProductId,Quantity,TotalSum")] Shopping shopping)
+        public async Task<IActionResult> Create([Bind("ProductId,Quantity")] Shopping shopping)
         {
             if (ModelState.IsValid)
             {
                 shopping.ClientId = _userManager.GetUserId(User);
                 shopping.RegisterOn = DateTime.Now;
+                decimal currentPrice = _context.Products.FirstOrDefault(x => x.Id == shopping.ProductId).Price;
+                shopping.TotalSum = shopping.Quantity * currentPrice;
                 _context.Shoppings.Add(shopping);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,7 +113,7 @@ namespace DZIproject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClientId,ProductId,Quantity,TotalSum")] Shopping shopping)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity")] Shopping shopping)
         {
             if (id != shopping.Id)
             {
@@ -108,6 +126,8 @@ namespace DZIproject.Controllers
                 {
                     shopping.ClientId = _userManager.GetUserId(User);
                     shopping.RegisterOn = DateTime.Now;
+                    decimal currentPrice = _context.Products.FirstOrDefault(x => x.Id == shopping.ProductId).Price;
+                    shopping.TotalSum = shopping.Quantity * currentPrice;                    
                     _context.Update(shopping);
                     await _context.SaveChangesAsync();
                 }
