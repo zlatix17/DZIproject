@@ -13,32 +13,41 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @*@Html.DisplayNameFor(model => model.Name)*@
+                Име
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Categories)
+               @* @Html.DisplayNameFor(model => model.Categories)*@
+                Вид
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Size)
+               @* @Html.DisplayNameFor(model => model.Size)*@
+                Размер
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Gender)
+               @* @Html.DisplayNameFor(model => model.Gender)*@
+                Пол
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+               @* @Html.DisplayNameFor(model => model.Quantity)*@
+                Количество
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @*@Html.DisplayNameFor(model => model.Description)*@
+                Описание
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+               @* @Html.DisplayNameFor(model => model.Price)*@
+                Цена
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
+               @* @Html.DisplayNameFor(model => model.ImageUrl)*@
+                Снимка
             </th>
-            <th>
+@*            <th>
                 @Html.DisplayNameFor(model => model.RegisterOn)
-            </th>
+                
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -69,9 +78,9 @@
             <td>
                     <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" width="100">              
             </td>
-            <td>
+           @* <td>
                 @Html.DisplayFor(modelItem => item.RegisterOn)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
