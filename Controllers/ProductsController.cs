@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DZIproject.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DZIproject.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly WebsDbContext _context;
+        private readonly UserManager<Client> _userManager;        
 
         public ProductsController(WebsDbContext context)
         {
@@ -43,10 +46,12 @@ namespace DZIproject.Controllers
 
             return View(product);
         }
+        [Authorize]
 
         // GET: Products/Create
         public IActionResult Create()
         {
+                                     
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
