@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DZIproject.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace DZIproject.Controllers
 {
@@ -23,6 +25,7 @@ namespace DZIproject.Controllers
         {
               return View(await _context.Categories.ToListAsync());
         }
+
 
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -42,6 +45,7 @@ namespace DZIproject.Controllers
             return View(categorie);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Categories/Create
         public IActionResult Create()
         {
@@ -65,6 +69,7 @@ namespace DZIproject.Controllers
             return View(categorie);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -117,6 +122,7 @@ namespace DZIproject.Controllers
             return View(categorie);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

@@ -27,7 +27,7 @@ namespace DZIproject.Controllers
             var websDbContext = _context.Products.Include(p => p.Categories);
             return View(await websDbContext.ToListAsync());
         }
-
+        [Authorize]
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -46,9 +46,10 @@ namespace DZIproject.Controllers
 
             return View(product);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
 
         // GET: Products/Create
+
         public IActionResult Create()
         {
                                      
@@ -74,6 +75,7 @@ namespace DZIproject.Controllers
             return View(product);
         }
 
+        [Authorize (Roles = "Admin")]
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -128,6 +130,7 @@ namespace DZIproject.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
