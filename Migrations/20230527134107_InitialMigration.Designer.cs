@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DZIproject.Migrations
 {
     [DbContext(typeof(WebsDbContext))]
-    [Migration("20230301150036_InitialMigration")]
+    [Migration("20230527134107_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
